@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Score On Fire</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body with Background Image */
+        body {
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-image: url('https://i.postimg.cc/jjLtxTsD/Picsart-24-10-04-22-01-37-438.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* Header Styling (Fully Opaque) */
+        .header {
+            text-align: center;
+            width: 100%;
+            background-color: black; /* 100% opacity background */
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 99;
+        }
+
+        .header h2 {
+            font-size: 1.4rem;
+            color: white;
+        }
+
+        /* Menu Icon (Hamburger) */
+        .menu-icon {
+            position: fixed;
+            top: 17px;
+            left: 10px;
+            font-size: 21px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        /* Sidebar Menu */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #424242;
+            transition: 0.2s;
+            padding-top: 0%;
+            z-index: 1000;
+        }
+
+        .sidebar a {
+            padding: 0px 0px;
+            text-decoration: none;
+            font-size: 1.5rem;
+            color: white;
+            display: block;
+            transition: 0.1s;
+        }
+
+        .sidebar a:hover {
+            background-color: #444;
+        }
+
+        /* Main Content */
+        .content {
+            flex: 1;
+            padding: 120px 20px;
+            overflow-y: auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Dynamic Content Area */
+        .dynamic-content {
+            margin-top: 20px;
+            padding: 10px;
+            margin-top: 110px;
+        }
+
+        /* Buttons Container (Fully Opaque) */
+        .buttons-container {
+            background-color: black; /* 100% opacity background */
+            width: 100%;
+            padding: 10px 0;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            z-index: 99;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Button Styles */
+        .btn {
+            border: 2px solid #FFD700;
+            background-color: transparent;
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px 15%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 10px;
+        }
+
+        .btn.selected {
+            background-color: #FFD700;
+            color: #000;
+        }
+
+        /* Overlay to detect outside clicks */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        /* Match Card Styles */
+        .match-card {
+            width: 99%; /* Restore your original card width */
+            background-color: rgba(68, 68, 68, 0.18);
+            border-radius: 5px;
+            overflow: hidden;
+            color: white;
+            margin: 12px auto;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            background-color: rgba(68, 68, 68, 0.8);
+            padding: 2px 5px;
+            font-size: 15px;
+            align-items: center;
+        }
+
+        .match-header .date {
+            color: #fff;
+        }
+
+        .country {
+            color: #fff;
+        }
+
+        .teams {
+            display: flex;
+            justify-content: space-between;
+            background: linear-gradient(to right, #C78B00, #573d00);
+            padding: 10px 5px;
+            font-size: 17px;
+        }
+
+        .pick {
+            background-color: #444;
+            color: white;
+            font-size: 15px;
+            padding: 5px 8px;
+            border-radius: 2px;
+            margin-right: 10px;
+        }
+
+        .odds {
+            background-color: limegreen;
+            color: #444;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+       
+        /* New styles for sidebar images */
+        .sidebar img {
+            width: 100%; /* Make sidebar images fit the width of the sidebar */
+            margin-bottom: 10px; /* Spacing between images */
+        }
+    </style>
+</head>
+<body
+
+
+
+ onload="selectButton('tips')"> <!-- Call selectButton on page load -->
+    <!-- Menu Icon (Hamburger) -->
+    <div class="menu-icon" onclick="toggleSidebar()" aria-label="Open Menu">
+        ☰
+    </div>
+    
+    
+ <!-- Sidebar Overlay -->
+    <nav class="sidebar" id="sidebar">
+        <!-- First Image (Click Disabled) -->
+        <a  target='_blank'><img src='https://i.postimg.cc/MGS9JvHD/Picsart-24-10-06-13-07-32-071.png' border='0' alt='Picsart-24-10-06-13-07-32-071'width='140' height='150'Top=10'/></a>
+        <!-- Second Image (Click to Open Telegram) -->
+        <a href='https://t.me/fixed_draw_betting_tips' target='_blank'><img src='https://i.postimg.cc/K8JLBP20/Picsart-24-10-06-13-09-17-930.jpg' border='0' alt='Picsart-24-10-06-13-09-17-930'/></a>
+    </nav>
+
+    <!-- Overlay for detecting clicks outside the sidebar -->
+    <div id="overlay" onclick="toggleSidebar()"></div>
+
+    <!-- Header Section -->
+    <div class="header">
+        <h2>SCORES ON FIRE</h2>
+    </div>
+
+    <!-- Dynamic Content Area -->
+    <div class="dynamic-content" id="dynamic-content">
+        <!-- Dynamic content will be loaded here -->
+    </div>
+
+    <!-- Button Section (Positioned Above Bottom) -->
+    <div class="buttons-container">
+        <div class="buttons">
+            <button class="btn tips" onclick="selectButton('tips')">TIPS</button>
+            <button class="btn join-vip" onclick="selectButton('join-vip')">JOIN VIP</button>
+        </div>
+    </div>
+
+    <script>
+        // Function to toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const overlay = document.getElementById("overlay");
+
+            const sidebarStyle = window.getComputedStyle(sidebar);
+            const currentLeft = sidebarStyle.left;
+
+            if (currentLeft === "-250px") {
+                sidebar.style.left = "0";  // Open sidebar
+                overlay.style.display = "block";  // Show overlay
+            } else {
+                sidebar.style.left = "-250px";  // Close sidebar
+                overlay.style.display = "none";  // Hide overlay
+            }
+        }
+
+        // Function to select a button and load content
+        function selectButton(button) {
+            const tipsButton = document.querySelector('.tips');
+            const joinVipButton = document.querySelector('.join-vip');
+            const dynamicContent = document.getElementById('dynamic-content');
+
+            if (button === 'tips') {
+                tipsButton.classList.add('selected');
+                joinVipButton.classList.remove('selected');
+                loadTipsContent(); // Load the TIPS content
+            } else if (button === 'join-vip') {
+                joinVipButton.classList.add('selected');
+                tipsButton.classList.remove('selected');
+                loadJoinVipContent(); // Load the Join VIP content
+            }
+        }
+
+        // Function to load TIPS content
+        function loadTipsContent() {
+            const dynamicContent = document.getElementById('dynamic-content');
+            dynamicContent.innerHTML = `
+            
+            
+            
+            
+            
+            
+            <div class="match-card">
+                    <div class="match-header">
+                        <div class="date">08/10</div>
+                        <div class="country">Argentina </div>
+                        <div style="text-align: center;">
+                            <a href='#' target='_blank'>
+                                <img src='https://i.postimg.cc/8P8JHGhR/Picsart-24-09-27-15-48-38-267-removebg-preview.png' border='0' alt='Icon' style='filter: brightness(0) invert(1); width: 18px; height: auto;' />
+            </a>
+                        </div>
+                    </div>
+                    <div class="teams">
+                        <div> Villa San Carlos </div>
+                        <div>Pending..</div>
+                        <div>Argntino de Merlo</div>
+                    </div>
+                    <div class="teams">
+                        <div class="pick">Pick: HT CS 0-0</div>
+                        <div class="odds">3.00</div>
+                    </div>
+                </div>
+            
+            
+            
+    
+            `;
+        }
+
+
+ 
+    // Function to handle the password prompt for the JOIN VIP section
+    function loadJoinVipContent() {
+        const password = prompt("Please enter the VIP password:");
+        
+        // You can replace 'bank' with the actual password you want
+        if (password === 'bank') {
+            const dynamicContent = document.getElementById('dynamic-content');
+            dynamicContent.innerHTML = `
+            
+           
+           
+           
+           <div class="match-card">
+                    <div class="match-header">
+                        <div class="date">08 | October </div>
+                        <div class="country">England</div>
+                       <a href='https://postimages.org/' target='_blank'>
+                                <img src='https://i.postimg.cc/8P8JHGhR/Picsart-24-09-27-15-48-38-267-removebg-preview.png' border='0' alt='Icon' style='filter: brightness(0) invert(1); width: 18px; height: auto;' />
+            </a>
+                            
+            
+                    
+                    </div>
+                    <div class="teams">
+                        <div>Crewe</div>
+                        <div>Pending..</div>
+                        <div>  Harrogate Town </div>
+                    </div>
+                    <div class="teams">
+                        <div class="pick">Pick: CS FT 3-0</div>
+                        <div class="odds">17.00</div>
+                    </div>
+           
+           
+           
+            
+            
+            
+            <div class="match-card">
+                    <div class="match-header">
+                        <div class="date">07 | October </div>
+                        <div class="country">England</div>
+                       <a href='https://postimages.org/' target='_blank'>
+                                <img src='https://i.postimg.cc/zfRQ07FP/Picsart-24-09-29-06-11-28-285-removebg-preview.png' border='0' alt='Picsart-24-09-29-06-11-28-285-removebg-preview' width='22' height='22'/>
+                            </a>
+                            
+            
+                    
+                    </div>
+                    <div class="teams">
+                        <div>Bradford City </div>
+                        <div>Woon✅</div>
+                        <div>Newport Country </div>
+                    </div>
+                    <div class="teams">
+                        <div class="pick">Pick: CS FT 3-1</div>
+                        <div class="odds">11.00</div>
+                    </div>
+            
+            
+            
+            
+            
+            <div class="match-card">
+                    <div class="match-header">
+                        <div class="date">06 | October </div>
+                        <div class="country">England</div>
+                       <a href='https://postimages.org/' target='_blank'>
+                                <img src='https://i.postimg.cc/zfRQ07FP/Picsart-24-09-29-06-11-28-285-removebg-preview.png' border='0' alt='Picsart-24-09-29-06-11-28-285-removebg-preview' width='22' height='22'/>
+                            </a>
+                            
+            
+                    
+                    </div>
+                    <div class="teams">
+                        <div>Aston Villa </div>
+                        <div>Woon✅</div>
+                        <div>Man. United</div>
+                    </div>
+                    <div class="teams">
+                        <div class="pick">Pick: CS FT 0-0</div>
+                        <div class="odds">19.00</div>
+                    </div>
+            
+            
+            
+            
+            
+            
+                <div class="match-card">
+                    <div class="match-header">
+                        <div class="date">05 | October </div>
+                        <div class="country">Spain 2</div>
+                       <a href='https://postimages.org/' target='_blank'>
+                                <img src='https://i.postimg.cc/zfRQ07FP/Picsart-24-09-29-06-11-28-285-removebg-preview.png' border='0' alt='Picsart-24-09-29-06-11-28-285-removebg-preview' width='22' height='22'/>
+                            </a>
+                            
+            
+                    
+                    </div>
+                    <div class="teams">
+                        <div>Real Zaragona </div>
+                        <div>Woon✅</div>
+                        <div>Racing de Santander</div>
+                    </div>
+                    <div class="teams">
+                        <div class="pick">Pick: CS HT 0-2</div>
+                        <div class="odds">8.00</div>
+                    </div>
+                
+
+
+                 
+               
+            `;
+        } else {
+            alert("Incorrect password. Access denied.");
+        }
+    }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Telegram</title>
+    <style>
+        /* Disable text selection */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -moz-user-select: none; /* Firefox */
+            -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+        }
+
+        .telegram {
+            background-color: #adff2f;
+            position: fixed;
+            color: #000;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 50px;
+            text-align: center;
+            bottom: 19px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .telegram i {
+            margin-right: 8px;
+            font-size: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <!-- Telegram button -->
+    <a href="https://t.me/fixed_draw_betting_tips" class="telegram">
+        <i class="fab fa-telegram-plane"></i> JOIN TELEGRAM
+    </a>
+
+</body>
+</html>
